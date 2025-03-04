@@ -53,4 +53,12 @@
             </p>
         </div>
     </form>
+
+    <!-- Continue with Google Button -->
+    <div class="mt-6 text-center">
+        <a href="{{ route('auth.google') }}" class="w-full flex items-center justify-center px-6 py-3 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition duration-300">
+            <img src="https://imagepng.org/wp-content/uploads/2019/08/google-icon.png" alt="Google Logo" class="w-5 h-5 mr-2">
+            {{ __('Continue with Google') }}
+        </a>
+    </div>
 </x-guest-layout>
