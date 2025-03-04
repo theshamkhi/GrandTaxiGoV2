@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TripController;
 use App\Http\Controllers\AvailabilityController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Auth\GoogleLoginController;
 
 Route::get('/', function () {
     return redirect()->route('dashboard');
@@ -25,6 +26,9 @@ Route::patch('/trips/{trip}/update-status', [TripController::class, 'updateStatu
 // Availability (for drivers)
 Route::resource('availability', AvailabilityController::class)
     ->middleware(['auth', 'role:driver']);
+
+Route::get('/auth/google', [GoogleLoginController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('/auth/google/callback', [GoogleLoginController::class, 'handleGoogleCallback']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
