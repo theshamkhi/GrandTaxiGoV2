@@ -6,6 +6,7 @@ use App\Http\Controllers\TripController;
 use App\Http\Controllers\AvailabilityController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\GoogleLoginController;
+use App\Http\Controllers\PaymentController;
 
 Route::get('/', function () {
     return redirect()->route('dashboard');
@@ -27,8 +28,13 @@ Route::patch('/trips/{trip}/update-status', [TripController::class, 'updateStatu
 Route::resource('availability', AvailabilityController::class)
     ->middleware(['auth', 'role:driver']);
 
+// Socialite Login
 Route::get('/auth/google', [GoogleLoginController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('/auth/google/callback', [GoogleLoginController::class, 'handleGoogleCallback']);
+
+// Payment (Stripe)
+Route::get('/payment/{trip_id}/{price}', [PaymentController::class, 'showPaymentForm'])->name('payment.form');
+Route::post('/payment/process', [PaymentController::class, 'processPayment'])->name('payment.process');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
