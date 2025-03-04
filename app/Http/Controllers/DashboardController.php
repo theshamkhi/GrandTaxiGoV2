@@ -25,7 +25,7 @@ class DashboardController extends Controller
                 })
                 ->with('availabilities')
                 ->get();
-    
+                
             return view('dashboard.passenger', compact('trips', 'availableDrivers'));
         }
     
@@ -39,7 +39,7 @@ class DashboardController extends Controller
             $availabilities = Availability::where('driver_id', $user->id)
                                         ->orderBy('start_time')
                                         ->get();
-    
+                                        
             return view('dashboard.driver', compact('reservations', 'availabilities'));
         }
     

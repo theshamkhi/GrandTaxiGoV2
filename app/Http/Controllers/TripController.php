@@ -26,13 +26,15 @@ class TripController extends Controller
             'driver_id' => 'nullable|exists:users,id'
         ]);
     
-        Trip::create([
+        $trip = Trip::create([
             ...$validated,
             'passenger_id' => Auth::id(),
             'status' => 'pending'
         ]);
     
-        return redirect()->route('dashboard')->with('success', 'Trip booked successfully!');
+        // Redirect to the payment page with the trip ID and price
+        return redirect()->route('payment.form', ['trip_id' => $trip->id, 'price' => $trip->price])
+                         ->with('success', 'Trip booked successfully! Please complete the payment.');
     }
 
     public function show(Trip $trip)
