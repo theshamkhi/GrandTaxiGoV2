@@ -6,6 +6,7 @@ use App\Models\Trip;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Models\Payment;
 
 class TripController extends Controller
 {
@@ -32,14 +33,28 @@ class TripController extends Controller
             'status' => 'pending'
         ]);
     
-        // Redirect to the payment page with the trip ID and price
         return redirect()->route('payment.form', ['trip_id' => $trip->id, 'price' => $trip->price])
                          ->with('success', 'Trip booked successfully! Please complete the payment.');
     }
 
+    public function updateStatus(Request $request, Trip $trip)
+    {
+
+        $validated = $request->validate([
+            'status' => 'required|in:accepted,rejected',
+        ]);
+
+        $trip->update(['status' => $validated['status']]);
+
+        return redirect()->route('trips.show', $trip->id)
+                         ->with('success', 'Trip status updated successfully.');
+    }
+
     public function show(Trip $trip)
     {
-        return view('trips.show', compact('trip'));
+        $payment = Payment::where('trip_id', $trip->id)->first();
+
+        return view('trips.show', compact('trip', 'payment'));
     }
 
     public function edit(Trip $trip)
@@ -59,21 +74,6 @@ class TripController extends Controller
 
         $trip->update($validated);
         return redirect()->route('trips.show', $trip)->with('success', 'Trip updated!');
-    }
-
-    public function updateStatus(Request $request, Trip $trip)
-    {
-        if (Auth::id() !== $trip->driver_id) {
-            abort(403, 'You are not authorized to update this trip.');
-        }
-    
-        $validated = $request->validate([
-            'status' => 'required|in:accepted,canceled'
-        ]);
-    
-        $trip->update(['status' => $validated['status']]);
-    
-        return redirect()->route('dashboard')->with('success', 'Trip status updated!');
     }
 
     public function destroy(Trip $trip)
