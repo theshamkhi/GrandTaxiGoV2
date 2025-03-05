@@ -5,27 +5,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Trip extends Model
+class Payment extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'trip_id',
         'passenger_id',
         'driver_id',
-        'pickup_location',
-        'destination',
-        'departure_time',
+        'amount',
+        'currency',
         'status',
-        'price'
     ];
 
-    protected $casts = [
-        'departure_time' => 'datetime',
-        'price' => 'decimal:2',
-        'status' => 'string',
-    ];
+    public function trip()
+    {
+        return $this->belongsTo(Trip::class);
+    }
 
-    // Relationships
     public function passenger()
     {
         return $this->belongsTo(User::class, 'passenger_id');
@@ -34,10 +31,5 @@ class Trip extends Model
     public function driver()
     {
         return $this->belongsTo(User::class, 'driver_id');
-    }
-
-    public function payment()
-    {
-        return $this->hasOne(Payment::class);
     }
 }
