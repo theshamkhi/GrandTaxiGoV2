@@ -17,8 +17,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->name('dashboard');
 
 // Trips
-Route::resource('trips', TripController::class)
-    ->middleware(['auth']);
+Route::resource('trips', TripController::class)->middleware(['auth']);
 
 Route::patch('/trips/{trip}/update-status', [TripController::class, 'updateStatus'])
     ->name('trips.update-status')
