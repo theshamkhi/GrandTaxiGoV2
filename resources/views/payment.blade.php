@@ -5,6 +5,19 @@
     <!-- Payment Title -->
     <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">Complete Your Payment</h2>
 
+    <!-- Display Payment Errors -->
+    @if ($errors->any())
+    <div class="mb-6 max-w-2xl mx-auto">
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    </div>
+    @endif
+
     <!-- Payment Card -->
     <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-8">
         <!-- Payment Details -->

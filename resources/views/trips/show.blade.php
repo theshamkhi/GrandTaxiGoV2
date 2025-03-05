@@ -63,28 +63,38 @@
         @if(auth()->user()->id === $trip->passenger_id)
             <div class="bg-gray-50 p-6">
                 <div class="flex justify-end space-x-4">
-                    <!-- Complete Payment Button -->
-                    @if($trip->status === 'pending')
+                    <!-- Payment Status Logic -->
+                    @if(!$payment || $payment->status === 'pending')
+                        <!-- Complete Payment Button -->
                         <a href="{{ route('payment.form', ['trip_id' => $trip->id, 'price' => $trip->price]) }}" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 border border-transparent rounded-lg font-semibold text-sm text-white uppercase tracking-widest hover:from-green-600 hover:to-green-700 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150 transform hover:scale-105">
                             <i class="fas fa-credit-card mr-2"></i>
                             Complete Payment
                         </a>
-                    @else
+                    @elseif($payment->status === 'canceled')
+                        <!-- Canceled Payment Badge -->
                         <span class="text-gray-500 flex items-center">
+                            <i class="fas fa-times-circle mr-2 text-red-500"></i>
+                            Payment Canceled
+                        </span>
+                    @elseif($payment->status === 'passed')
+                        <!-- Paid Badge -->
+                        <span class="text-gray-500 flex items-center mr-8">
                             <i class="fas fa-check-circle mr-2 text-green-500"></i>
                             Paid
                         </span>
                     @endif
 
                     <!-- Cancel Button -->
-                    <form action="{{ route('trips.destroy', $trip) }}" method="POST" class="inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 border border-transparent rounded-lg font-semibold text-sm text-white uppercase tracking-widest hover:from-red-600 hover:to-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150 transform hover:scale-105" onclick="return confirm('Are you sure you want to cancel this trip?')">
-                            <i class="fas fa-times mr-2"></i>
-                            Cancel Trip
-                        </button>
-                    </form>
+                    @if($trip->status === 'pending')
+                        <form action="{{ route('trips.destroy', $trip) }}" method="POST" class="inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 border border-transparent rounded-lg font-semibold text-sm text-white uppercase tracking-widest hover:from-red-600 hover:to-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150 transform hover:scale-105" onclick="return confirm('Are you sure you want to cancel this trip?')">
+                                <i class="fas fa-times mr-2"></i>
+                                Cancel Trip
+                            </button>
+                        </form>
+                    @endif
                 </div>
             </div>
         @endif
