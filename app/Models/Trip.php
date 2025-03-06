@@ -40,4 +40,12 @@ class Trip extends Model
     {
         return $this->hasOne(Payment::class);
     }
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'trip_id');
+    }
+    public function averageRating()
+    {
+        return $this->ratings()->avg('rating');
+    }
 }

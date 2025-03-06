@@ -54,4 +54,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Payment::class, 'driver_id');
     }
+    public function reviewsAsDriver()
+    {
+        return $this->hasMany(Review::class, 'driver_id');
+    }
+    public function reviewsAsPassenger()
+    {
+        return $this->hasMany(Review::class, 'passenger_id');
+    }
 }
