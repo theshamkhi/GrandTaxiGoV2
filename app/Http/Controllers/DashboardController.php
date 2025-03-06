@@ -14,7 +14,6 @@ class DashboardController extends Controller
         $user = Auth::user();
         
         if ($user->role === 'passenger') {
-
             $trips = Trip::where('passenger_id', $user->id)
                         ->orderBy('departure_time', 'desc')
                         ->paginate(10);
@@ -30,7 +29,6 @@ class DashboardController extends Controller
         }
     
         if ($user->role === 'driver') {
-
             $reservations = Trip::where('driver_id', $user->id)
                               ->orderBy('departure_time')
                               ->with('passenger')
@@ -41,6 +39,34 @@ class DashboardController extends Controller
                                         ->get();
                                         
             return view('dashboard.driver', compact('reservations', 'availabilities'));
+        }
+    
+        if ($user->role === 'admin') {
+
+            $users = User::whereIn('role', ['driver', 'passenger'])->get();
+
+            $trips = Trip::with(['passenger', 'driver'])
+                         ->orderBy('departure_time', 'desc')
+                         ->get();
+
+            $totalTrips = $trips->count();
+            $canceledTrips = $trips->where('status', 'canceled')->count();
+            $completedTrips = $trips->where('status', 'completed')->count();
+            $revenue = $trips->where('status', 'completed')->sum('price');
+
+            $availabilities = Availability::with('driver')
+                                         ->orderBy('start_time', 'desc')
+                                         ->get();
+
+            return view('dashboard.admin', compact(
+                'users',
+                'trips',
+                'totalTrips',
+                'canceledTrips',
+                'completedTrips',
+                'revenue',
+                'availabilities'
+            ));
         }
     
         return redirect('/');
