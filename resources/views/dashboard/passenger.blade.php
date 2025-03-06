@@ -62,7 +62,7 @@
             
                         <!-- Price -->
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            ${{ number_format($trip->price, 2) }}
+                            {{ number_format($trip->price, 2) }} MAD
                         </td>
             
                         <!-- Actions -->
