@@ -60,19 +60,22 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 @if($trip->status === 'pending')
                                     <div class="flex space-x-2">
+                                        <!-- Accept Button -->
                                         <form action="{{ route('trips.update-status', $trip) }}" method="POST" class="inline">
                                             @csrf
                                             @method('PATCH')
                                             <input type="hidden" name="status" value="accepted">
-                                            <button type="submit" class="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600 hover-scale transition duration-300">
+                                            <button type="submit" class="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600 hover:scale-105 transition duration-300">
                                                 Accept
                                             </button>
                                         </form>
+                            
+                                        <!-- Reject Button -->
                                         <form action="{{ route('trips.update-status', $trip) }}" method="POST" class="inline">
                                             @csrf
                                             @method('PATCH')
                                             <input type="hidden" name="status" value="canceled">
-                                            <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 hover-scale transition duration-300">
+                                            <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 hover:scale-105 transition duration-300">
                                                 Reject
                                             </button>
                                         </form>

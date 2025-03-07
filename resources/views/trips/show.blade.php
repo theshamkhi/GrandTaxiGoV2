@@ -53,7 +53,7 @@
                     <p class="text-lg text-gray-700 flex items-center">
                         <i class="fas fa-user mr-2 text-purple-500"></i>
                         <strong class="mr-2">Passenger:</strong>
-                        <span class="text-gray-600">{{ auth()->user()->name }}</span>
+                        <span class="text-gray-600">{{ $trip->passenger->name }}</span>
                     </p>
                 </div>
             </div>
@@ -163,7 +163,7 @@
                     @endif
 
                     <!-- Delete Button -->
-                    @if(auth()->user()->id === $review->user_id || auth()->user()->isAdmin())
+                    @if(auth()->user()->id === $review->user_id || auth()->user()->role === 'admin')
                         <form action="{{ route('reviews.destroy', $review) }}" method="POST" class="flex justify-end">
                             @csrf
                             @method('DELETE')
