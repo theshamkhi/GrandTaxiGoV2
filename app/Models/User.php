@@ -49,7 +49,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(Payment::class, 'passenger_id');
     }
-
     public function paymentsAsDriver()
     {
         return $this->hasMany(Payment::class, 'driver_id');
