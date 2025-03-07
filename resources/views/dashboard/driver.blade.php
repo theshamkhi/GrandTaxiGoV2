@@ -81,7 +81,9 @@
                                         </form>
                                     </div>
                                 @else
-                                    <span class="text-gray-500">No actions available</span>
+                                    <a href="{{ route('trips.show', $trip) }}" class="text-indigo-600 hover:text-indigo-900 hover-scale transition duration-300">
+                                        View
+                                    </a>
                                 @endif
                             </td>
                         </tr>
@@ -100,10 +102,13 @@
             <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 @foreach($availabilities as $availability)
                 <li class="bg-white rounded-lg shadow p-4">
-                    <p class="text-sm text-gray-700">
+                    <p class="text-lg text-gray-700 mb-2">📌 {{ $availability->location }}</p>
+                    <p class="text-sm text-gray-700 mb-4">
                         <strong>{{ $availability->start_time->format('M d H:i') }} - {{ $availability->end_time->format('M d H:i') }}</strong>
                     </p>
-                    <p class="text-xs text-gray-500">Location: {{ $availability->location }}</p>
+                    <a href="{{ route('availability.edit', $availability) }}" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 hover-scale transition duration-300 flex items-center justify-center">
+                        Edit
+                    </a>
                 </li>
                 @endforeach
             </ul>
