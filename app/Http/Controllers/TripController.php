@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Models\Payment;
 use App\Mail\ReservationAccepted;
 use Illuminate\Support\Facades\Mail;
+use App\Models\Availability;
 
 class TripController extends Controller
 {
@@ -38,7 +39,6 @@ class TripController extends Controller
         return redirect()->route('payment.form', ['trip_id' => $trip->id, 'price' => $trip->price])
                          ->with('success', 'Trip booked successfully! Please complete the payment.');
     }
-
     public function updateStatus(Request $request, Trip $trip)
     {
         $validated = $request->validate([
@@ -48,6 +48,22 @@ class TripController extends Controller
         $trip->update(['status' => $validated['status']]);
 
         if ($validated['status'] === 'accepted') {
+
+            $availability = Availability::where('driver_id', $trip->driver_id)
+                                        ->where('start_time', '<=', $trip->departure_time)
+                                        ->where('end_time', '>=', $trip->departure_time)
+                                        ->first();
+
+            if ($availability) {
+
+                Trip::where('driver_id', $trip->driver_id)
+                    ->where('status', 'pending')
+                    ->where('id', '!=', $trip->id) // Exclude the accepted trip
+                    ->where('departure_time', '>=', $availability->start_time)
+                    ->where('departure_time', '<=', $availability->end_time)
+                    ->update(['status' => 'canceled']);
+            }
+
             Mail::to($trip->passenger->email)->send(new ReservationAccepted($trip));
         }
 
