@@ -13,13 +13,11 @@ Route::get('/', function () {
     return redirect()->route('dashboard');
 });
 
-Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(['auth'])
-    ->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
 
 // Trips
 Route::resource('trips', TripController::class)->middleware(['auth']);
-Route::patch('/trips/{trip}/update-status', [TripController::class, 'updateStatus'])->name('trips.update-status')->middleware('auth');
+Route::patch('/trips/{trip}/update-status', [TripController::class, 'updateStatus'])->name('trips.update-status');
 
 // Reviews
 Route::post('/trips/{trip}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
