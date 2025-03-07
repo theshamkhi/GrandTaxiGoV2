@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Models\Payment;
+use App\Mail\ReservationAccepted;
+use Illuminate\Support\Facades\Mail;
 
 class TripController extends Controller
 {
@@ -39,15 +41,17 @@ class TripController extends Controller
 
     public function updateStatus(Request $request, Trip $trip)
     {
-
         $validated = $request->validate([
             'status' => 'required|in:accepted,rejected',
         ]);
 
         $trip->update(['status' => $validated['status']]);
 
-        return redirect()->route('trips.show', $trip->id)
-                         ->with('success', 'Trip status updated successfully.');
+        if ($validated['status'] === 'accepted') {
+            Mail::to($trip->passenger->email)->send(new ReservationAccepted($trip));
+        }
+
+        return redirect()->route('trips.show', $trip->id)->with('success', 'Trip status updated successfully.');
     }
 
     public function show(Trip $trip)
